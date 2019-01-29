@@ -4,7 +4,11 @@ This is a relatively straightforward implementation of a Java ExecutorService th
 
 ## Installation and Use
 
-There is no installation.  Just include it as a library in your Java project.  The class you'll want to use is `sres.GridExecutorService`.  This class maintains a list of computational resources that can be used to process `Runnable`s and `Callables`.  It maintains both (1) it's own local `ThreadPoolExecutor` and (2) a list of proxies for remote `ThreadPoolExecutors`.  As long as the tasks submitted to `GridExecutorService` are `Serializable`, they may be executed on one of the remotes. The results (if any) are made available to the originator.  In the extremely likely event you want to do something with the results of the remote computation, you should use or extend the `RemoteCallable` class.  Its constructor will allow you to specify a closure to process the result of the underlying `Callable`.
+This is meant to be used as a library to include in a Java project that wants to use Java's built-in `ExecutorService` API, but to have the actual execution happen remotely.  I built this where the evolutionary computation system would run on a central node, but then farm out the fitness evaluation for groups of agents to remote hosts.  
+
+On the central node, you'll want to instantiate a `sres.GridExecutorService`, where you can specify (1) the port to listen on, (2) a shared authentication secret, and (3) optional use of local CPU resources.  On the worker nodes, you'll want to start up a thread with the `main()` function in `RemoteEvaluationWorker`.  The command line requires you to specify the network address of the central node and the shared secret.  
+
+ As long as the tasks submitted to `GridExecutorService` are `Serializable`, they may be executed on one of the remotes. The results (if any) are made available to the originator.  In the extremely likely event you want to do something with the results of the remote computation, you should use or extend the `RemoteCallable` class.  Its constructor will allow you to specify a closure to process the result of the underlying `Callable`.
 
 There's a few test classes that are useful for demonstration purposes in addition to testing, but to save you some time...
 
